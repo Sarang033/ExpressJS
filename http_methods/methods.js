@@ -7,10 +7,12 @@ app.listen(3000)
 
 let users = {}
 
+//GET
 app.get('/user',(req,res)=>{
     res.send(users)  
 })
 
+//POST
 app.post('/user',(req,res)=>{
     console.log(req.body) 
     users=req.body
@@ -20,8 +22,7 @@ app.post('/user',(req,res)=>{
     })
 })
 
-//Update
-
+//UPDATE
 app.patch('/user',(req,res)=>{
     console.log('req.body->',req.body)
     //update data in users obj
@@ -34,7 +35,7 @@ app.patch('/user',(req,res)=>{
     })
 })
 
-//delete
+//DELETE
 app.delete('/user',(req,res)=>{
     users={}
     res.json({
