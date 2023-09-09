@@ -22,3 +22,8 @@ app.get('/about-us',(req,res)=>{
 app.use((req,res)=>{
     res.status(404).sendFile('/files/404.html',{root:__dirname})
 })
+
+// GET REQUEST
+
+
+// POST -> to send data from frontend to backend
