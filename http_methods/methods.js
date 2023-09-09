@@ -5,10 +5,25 @@ app.use(express.json())
 
 app.listen(3000)
 
-let users = {}
+let users =[
+    {
+        'id':1,
+        'name':'Sarang'
+    },
+    {
+        'id':2,
+        'name':'Ritesh'
+    },
+    {
+        'id':1,
+        'name':'Mayank'
+    }
+]
+
 
 //GET
 app.get('/user',(req,res)=>{
+    console.log(req.query) //query
     res.send(users)  
 })
 
@@ -41,4 +56,11 @@ app.delete('/user',(req,res)=>{
     res.json({
         message:"Data has been deleted"
     })
+})
+
+//PARAMETERS
+app.get('/user/:username',(req,res)=>{
+    console.log(req.params.username)
+    console.log(req.params)
+    res.send("Username recieved")
 })
