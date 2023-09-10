@@ -23,8 +23,12 @@ let users =[
 //Mini App
 
 const userRouter=express.Router();
+
+const authRouter=express.Router();
+
 // Base router, Router to use
 app.use('/user',userRouter);
+app.use('/auth',authRouter);
 
 userRouter
 .route('/')
@@ -36,6 +40,11 @@ userRouter
 userRouter
 .route('/:id')
 .get(getUserById)
+
+authRouter
+.route('/signup')
+.get(getSignUp)
+.post(postSignUp)
 
 //GET
 // app.get('/user',(req,res)=>{
@@ -80,6 +89,8 @@ userRouter
 //     console.log(req.params)
 //     res.send("Username recieved")
 // })
+
+
 
 //MOUNTING In Express -> commented the get method
 
@@ -129,3 +140,19 @@ function deleteUser(req,res){
         data:obj
     })
  }
+
+ // AUTH -> SIGNUP FORM
+
+ function getSignUp(req,res){
+    res.sendFile('/index.html',{root:__dirname});
+ }
+
+
+function postSignUp(req,res){
+    let obj = req.body;
+    console.log('backend',obj)
+    res.json({
+        message:"User Signed Up",
+        data:obj
+    })
+}
