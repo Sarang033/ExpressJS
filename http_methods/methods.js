@@ -43,9 +43,14 @@ userRouter
 
 authRouter
 .route('/signup')
-.get(getSignUp)
+.get(middleware,getSignUp)
 .post(postSignUp)
 
+//MiddleWare
+function middleware(req,res,next){
+    console.log("Middleware encountered")
+    next();
+}
 //GET
 // app.get('/user',(req,res)=>{
 //     console.log(req.query) //query
