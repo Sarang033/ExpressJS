@@ -1,5 +1,5 @@
+const mongoose=require("mongoose")
 const express= require('express')
-
 const app = express()
 app.use(express.json())
 
@@ -160,4 +160,54 @@ function postSignUp(req,res){
         message:"User Signed Up",
         data:obj
     })
+}
+
+
+//Connecting Mongoose
+const db_link="mongodb+srv://sarangchamp2004:Sarangmongo33@cluster0.efpck6j.mongodb.net/?retryWrites=true&w=majority"
+mongoose.connect(db_link)
+.then(function(db){
+    console.log(db)
+    console.log("db connected")
+})
+.catch(function(err){
+    console.log(err)
+});
+
+//Creating User Schema
+const userSchema=mongoose.Schema({
+    name:{
+        type:String,
+        required:true
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    password:{
+        type:String,
+        required:true,
+        min:8
+    },
+    confirmPassword:{
+        type:String,
+        required:true,
+        min:8
+    },
+})
+
+//Model
+
+const userModel=mongoose.model('userModel',userSchema)
+
+async function createUser(){
+    let user={
+        name:'Sarang',
+        email:'sarang@gmail.com',
+        password:"Sarangmeth",
+        confirmPassword:"Sarangmeth"
+    }
+    let data=await userModel.create(user)
+    console.log(data)
 }
