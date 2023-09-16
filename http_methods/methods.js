@@ -1,5 +1,6 @@
 const mongoose=require("mongoose")
 const express= require('express')
+const emailValidator = require("email-validator")
 const app = express()
 app.use(express.json())
 
@@ -161,8 +162,8 @@ function deleteUser(req,res){
 
 async function postSignUp(req,res){
     let dataObj = req.body;
-    let user=await userModel.create(dataObj)
-    console.log('backend',user)
+     let user=await userModel.create(dataObj)
+    // console.log('backend',user)
     res.json({
         message:"User Signed Up",
         data:user
@@ -189,7 +190,10 @@ const userSchema=mongoose.Schema({
     email:{
         type:String,
         required:true,
-        unique:true
+        unique:true,
+        validate:function(){
+            return emailValidator.validate(this.email);
+        }
     },
     password:{
         type:String,
@@ -199,13 +203,35 @@ const userSchema=mongoose.Schema({
     confirmPassword:{
         type:String,
         required:true,
-        min:8
+        min:8,
+        validate:function(){
+            return this.confirmPassword==this.password
+        }
     },
 })
+
+// PRE AND POST HOOKS
+
+// userSchema.pre('save',function(){
+//     console.log('before saving in db',this)
+// })
+
+// userSchema.post('save',function(doc){
+//     console.log('after saving in db',doc)
+// })
+
+//Dont store confirmPassword into database using hooks
+userSchema.pre('save',function(){
+    this.confirmPassword=undefined;
+})
+
+
 
 //Model
 
 const userModel=mongoose.model('userModel',userSchema);
+
+
 
 // (async function createUser(){
 //     let user={
