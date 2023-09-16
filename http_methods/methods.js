@@ -5,20 +5,20 @@ app.use(express.json())
 
 app.listen(3000)
 
-let users =[
-    {
-        'id':1,
-        'name':'Sarang'
-    },
-    {
-        'id':2,
-        'name':'Ritesh'
-    },
-    {
-        'id':1,
-        'name':'Mayank'
-    }
-]
+// let users =[
+//     {
+//         'id':1,
+//         'name':'Sarang'
+//     },
+//     {
+//         'id':2,
+//         'name':'Ritesh'
+//     },
+//     {
+//         'id':1,
+//         'name':'Mayank'
+//     }
+// ]
 
 //Mini App
 
@@ -32,7 +32,7 @@ app.use('/auth',authRouter);
 
 userRouter
 .route('/')
-.get(getUser)
+.get(getUsers)
 .post(postUser)
 .patch(updateUser)
 .delete(deleteUser)
@@ -99,8 +99,12 @@ function middleware(req,res,next){
 
 //MOUNTING In Express -> commented the get method
 
-function getUser(req,res){
-    res.send(users)
+async function getUsers(req,res){
+    let allUsers= await userModel.find()
+    res.json({
+        massage:'List of all users',
+        data:allUsers
+    })
 }
 
 function postUser(req,res){
@@ -112,15 +116,17 @@ function postUser(req,res){
     })
 }
 
-function updateUser(req,res){
+async function updateUser(req,res){
     console.log('req.body->',req.body)
     //update data in users obj
     let dataToBeUpdated=req.body
-    for(key in dataToBeUpdated){
-        users[key]=dataToBeUpdated[key]
-    }
+    let user= await userModel.findOneAndUpdate({email:'rohan@gamil.com'},dataToBeUpdated);
+    // for(key in dataToBeUpdated){
+    //     users[key]=dataToBeUpdated[key]
+    // }
     res.json({
-        message:"data updated successfully"
+        message:"data updated successfully",
+        data:user
     })
 }
 
@@ -148,17 +154,18 @@ function deleteUser(req,res){
 
  // AUTH -> SIGNUP FORM
 
- function getSignUp(req,res){
+ function getSignUp(req,res,next){
     res.sendFile('/index.html',{root:__dirname});
  }
 
 
-function postSignUp(req,res){
-    let obj = req.body;
-    console.log('backend',obj)
+async function postSignUp(req,res){
+    let dataObj = req.body;
+    let user=await userModel.create(dataObj)
+    console.log('backend',user)
     res.json({
         message:"User Signed Up",
-        data:obj
+        data:user
     })
 }
 
@@ -167,7 +174,6 @@ function postSignUp(req,res){
 const db_link="mongodb+srv://sarangchamp2004:Sarangmongo33@cluster0.efpck6j.mongodb.net/?retryWrites=true&w=majority"
 mongoose.connect(db_link)
 .then(function(db){
-    console.log(db)
     console.log("db connected")
 })
 .catch(function(err){
@@ -199,15 +205,15 @@ const userSchema=mongoose.Schema({
 
 //Model
 
-const userModel=mongoose.model('userModel',userSchema)
+const userModel=mongoose.model('userModel',userSchema);
 
-async function createUser(){
-    let user={
-        name:'Sarang',
-        email:'sarang@gmail.com',
-        password:"Sarangmeth",
-        confirmPassword:"Sarangmeth"
-    }
-    let data=await userModel.create(user)
-    console.log(data)
-}
+// (async function createUser(){
+//     let user={
+//         name:'Rohan',
+//         email:'rohan@gmail.com',
+//         password:"tarri2001",
+//         confirmPassword:"tarri2001"
+//     }
+//     let data= await userModel.create(user)
+//     console.log(data)
+// })();
